@@ -15,16 +15,18 @@ namespace Extensions.Configuration.Providers.AwsSecretsManager
     {
         private readonly IConfigurationRoot _configuration;
         private readonly string _secretKeyName;
+        private readonly IAmazonSecretsManager _amazonSecretsManager;
 
         /// <summary>
         /// Creates an instance of <see cref="AwsSecretsManagerConfigurationProvider"/>
         /// </summary>
         /// <param name="configuration">The <see cref="IConfigurationRoot"/> that holds the config to be parsed.</param>
         /// <param name="secretKeyName">The key name that we'll search for to find AWS Secrets Manager keys and replace with values from AWS Secrets Manager.</param>
-        public AwsSecretsManagerConfigurationProvider(IConfigurationRoot configuration, string secretKeyName)
+        public AwsSecretsManagerConfigurationProvider(IConfigurationRoot configuration, IAmazonSecretsManager amazonSecretsManager, string secretKeyName)
         {
             _configuration = configuration;
             _secretKeyName = secretKeyName;
+            _amazonSecretsManager = amazonSecretsManager;
         }
 
         /// <inheritdoc/>
@@ -151,14 +153,12 @@ namespace Extensions.Configuration.Providers.AwsSecretsManager
         /// <returns>A string representing the value in AWS Secrets Manager.</returns>
         private string GetAwsSecret(string key)
         {
-            IAmazonSecretsManager awsSecretsManager = new AmazonSecretsManagerClient();
-
             GetSecretValueRequest request = new GetSecretValueRequest
             {
                 SecretId = key
             };
 
-            GetSecretValueResponse response = awsSecretsManager.GetSecretValueAsync(request).GetAwaiter().GetResult();
+            GetSecretValueResponse response = _amazonSecretsManager.GetSecretValueAsync(request).GetAwaiter().GetResult();
 
             if (response.SecretString == null)
             {
