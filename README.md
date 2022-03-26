@@ -1,4 +1,4 @@
-# custom-configuration-providers
+# Custom Configuration Providers
 
 Custom Configuration Providers is a collection of configuration providers for .Net that extend Microsoft.Extensions.Configuration to pull configuration data from a variety of sources.  Details on how this custom configration provider is built can be found here:
 [Implement a custom configuration provider in .NET](https://docs.microsoft.com/en-us/dotnet/core/extensions/custom-configuration-provider)
