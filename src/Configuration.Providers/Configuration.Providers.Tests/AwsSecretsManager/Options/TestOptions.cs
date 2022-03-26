@@ -2,9 +2,6 @@
 {
     public class TestOptions
     {
-        public TestOptions()
-        {}
-
         public string Server { get; set; }
         public string Port { get; set; }
         public string Timeout { get; set; }
