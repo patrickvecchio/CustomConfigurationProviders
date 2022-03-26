@@ -5,7 +5,12 @@ VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.Providers", "Configuration.Providers\Configuration.Providers.csproj", "{72E28CF1-DD27-4890-A6BE-FDA27D426E38}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Configuration.Providers.Tests", "Configuration.Providers.Tests\Configuration.Providers.Tests.csproj", "{87FECC68-C4CC-4146-A15C-1D0DDE9F07BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Configuration.Providers.Tests", "Configuration.Providers.Tests\Configuration.Providers.Tests.csproj", "{87FECC68-C4CC-4146-A15C-1D0DDE9F07BB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{37CEBF36-B587-47BA-B3DA-D6DF70C6637A}"
+	ProjectSection(SolutionItems) = preProject
+		..\..\README.md = ..\..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
