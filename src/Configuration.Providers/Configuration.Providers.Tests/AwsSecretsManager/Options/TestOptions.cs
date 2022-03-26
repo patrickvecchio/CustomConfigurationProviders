@@ -2,9 +2,13 @@
 {
     public class TestOptions
     {
-        public string secretString { get; set; }
-        public int secretInt { get; set; }
-        public double secretDouble { get; set; }
-        public bool secretBool { get; set; }
+        public TestOptions()
+        {}
+
+        public string Server { get; set; }
+        public string Port { get; set; }
+        public string Timeout { get; set; }
+        public string UserName { get; set; }
+        public string Password { get; set; }
     }
 }

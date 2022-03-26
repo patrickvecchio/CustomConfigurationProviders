@@ -33,7 +33,6 @@ namespace Extensions.Configuration.Providers.AwsSecretsManager
         public override void Load()
         {
             Data.Clear();
-            //var expandedKeyValuePairs = ExtractData(_configuration, _secretKeyName);
             var expandedKeyValuePairs = new List<KeyValuePair<string,string>>();
             RecurseForData(_configuration, _secretKeyName, ref expandedKeyValuePairs);
 
@@ -41,20 +40,6 @@ namespace Extensions.Configuration.Providers.AwsSecretsManager
             {
                 Data.Add(expandedKeyValuePair);
             }
-        }
-
-        /// <summary>
-        /// Extracts the AWS Secret Manager values for the given secret key name.
-        /// </summary>
-        /// <param name="config">The <see cref="IConfigurationRoot"/> to search.</param>
-        /// <param name="secretKeyName">The key name to search for.</param>
-        /// <returns></returns>
-        private List<KeyValuePair<string, string>> ExtractData(IConfigurationRoot config, string secretKeyName)
-        {
-            var keyValuePairs = new List<KeyValuePair<string, string>>();
-            RecurseForData(config, secretKeyName, ref keyValuePairs);
-
-            return keyValuePairs;
         }
 
         /// <summary>
@@ -87,63 +72,27 @@ namespace Extensions.Configuration.Providers.AwsSecretsManager
         /// <param name="parentPath">The parent path in the <see cref="IConfigurationSection"/> being parsed.</param>
         /// <param name="json">The JSON contained within the current <see cref="IConfigurationSection"/> being parsed.</param>
         /// <returns></returns>
-        private List<KeyValuePair<string, string>> GetKeyValuePairsFromJson(string parentPath, string json)
+        private Dictionary<string, string> GetKeyValuePairsFromJson(string parentPath, string json)
         {
-            var keyValuePairs = new List<KeyValuePair<string, string>>();
-            StringBuilder keyBuilder = new StringBuilder(parentPath);
-
-            var reader = new Utf8JsonReader(Encoding.UTF8.GetBytes(json));
-            while (reader.Read())
+            JsonSerializerOptions jsonSerializationOptions = new JsonSerializerOptions
             {
-                string value = null;
+                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+            var secretValues = JsonSerializer.Deserialize<Dictionary<string, string>>(json, jsonSerializationOptions);
 
-                switch (reader.TokenType)
-                {
-                    case JsonTokenType.PropertyName:
-                        keyBuilder.Append($":{reader.GetString()}");
-                        break;
-                    case JsonTokenType.Comment:
-                        break;
-                    case JsonTokenType.String:
-                        value = reader.GetString();
-                        break;
-                    case JsonTokenType.Number:
-                        if (reader.TryGetDouble(out double doubleValue))
-                        {
-                            value = doubleValue.ToString();
-                        }
-
-                        if (reader.TryGetInt32(out int intValue))
-                        {
-                            value = intValue.ToString();
-                        }
-                        break;
-                    case JsonTokenType.True:
-                        value = reader.GetBoolean().ToString();
-                        break;
-                    case JsonTokenType.False:
-                        value = reader.GetBoolean().ToString();
-                        break;
-                    case JsonTokenType.None:
-                    case JsonTokenType.StartObject:
-                    case JsonTokenType.EndObject:
-                    case JsonTokenType.StartArray:
-                    case JsonTokenType.EndArray:
-                    case JsonTokenType.Null:
-                        break;
-                    default:
-                        break;
-                }
-
-                if (null != value)
-                {
-                    keyValuePairs.Add(new KeyValuePair<string, string>(keyBuilder.ToString(), value));
-                    keyBuilder.Clear();
-                    keyBuilder.Append(parentPath);
-                }
+            if (string.IsNullOrWhiteSpace(parentPath))
+            {
+                return secretValues;
             }
 
-            return keyValuePairs;
+            var secretValuesWithParentPath = new Dictionary<string, string>();
+            foreach (var secretValue in secretValues)
+            {
+                secretValuesWithParentPath.Add($"{parentPath}:{secretValue.Key}", secretValue.Value);
+            }
+
+            return secretValuesWithParentPath;
         }
 
         /// <summary>

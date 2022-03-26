@@ -12,16 +12,21 @@ namespace Configuration.Providers.Tests.AwsSecretsManager.Mocks
 {
     public class MockAwsSecretsManager : IAmazonSecretsManager
     {
-        private readonly Dictionary<string, object> _secretsData;
+        private readonly Dictionary<string, Dictionary<string, string>> _secretsData;
 
-        public MockAwsSecretsManager(Dictionary<string,object> secretsData)
+        public MockAwsSecretsManager(Dictionary<string, Dictionary<string, string>> secretsData)
         {
             _secretsData = secretsData;
         }
 
         public Task<GetSecretValueResponse> GetSecretValueAsync(GetSecretValueRequest request, CancellationToken cancellationToken = default)
         {
-            var data = JsonSerializer.Serialize(_secretsData[request.SecretId]);
+            var jsonSerializerOptions = new JsonSerializerOptions
+            {
+                DictionaryKeyPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+            };
+            var data = JsonSerializer.Serialize(_secretsData[request.SecretId], jsonSerializerOptions);
             return Task.FromResult<GetSecretValueResponse>(new GetSecretValueResponse
             {
                 ARN = string.Empty,
