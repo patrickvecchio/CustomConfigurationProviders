@@ -5,7 +5,8 @@ on:
     branches: [ develop ]
   pull_request:
     branches: [ develop ]
-
+env:
+  SLN_PATH: src/Configuration.Providers
 jobs:
   build:
 
@@ -17,6 +18,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+    - name: Go to solution directory
+      run: cd $SLN_PATH
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
