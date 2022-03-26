@@ -19,7 +19,7 @@ jobs:
       with:
         dotnet-version: 3.1.x
     - name: Go to solution directory
-      run: cd $SLN_PATH
+      run: cd $GITHUB_WORKSPACE/$SLN_PATH
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
