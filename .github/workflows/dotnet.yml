@@ -18,8 +18,12 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+    - name: Dir
+      run: ls -aR
     - name: Go to solution directory
       run: cd $GITHUB_WORKSPACE/$SLN_PATH
+    - name: Dir
+      run: ls -aR
     - name: Restore dependencies
       run: dotnet restore
     - name: Build
