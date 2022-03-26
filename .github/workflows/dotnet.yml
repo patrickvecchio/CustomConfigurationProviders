@@ -18,15 +18,9 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
-    - name: Dir
-      run: ls -lR
-    - name: Go to solution directory
-      run: cd $SLN_PATH
-    - name: Dir
-      run: ls -lR
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore $SLN_PATH
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build  $SLN_PATH --no-restore
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test  $SLN_PATH --no-build --verbosity normal
