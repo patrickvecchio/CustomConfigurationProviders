@@ -39,8 +39,8 @@ So, here's the appsettings before and after running AddAwsSecretsManager:
       </td>
       <td>
 "Database:server": "db1.myurl.com"<br>
-"Database:port": 3306<br>
-"Database:timeout": 5<br>
+"Database:port": "3306"<br>
+"Database:timeout": "5"<br>
 "Database:userName": "ApiReadOnly"<br>
 "Database:password": "NunyaBizness!"<br>
       </td>
@@ -117,8 +117,8 @@ When you build the config builder, the custom configuration provider will look i
       </td>
       <td>
 "Database:server": "db1.myurl.com"<br>
-"Database:port": 3306<br>
-"Database:timeout": 5<br>
+"Database:port": "3306"<br>
+"Database:timeout": "5"<br>
 "Database:userName": "ApiReadOnly"<br>
 "Database:password": "NunyaBizness!"<br>
       </td>
@@ -134,12 +134,15 @@ With the AWS Secrets expanded using the configuration provider, we can use the s
 public class DatabaseOptions
 {
   public string Server { get; set; }
-  public int Port { get; set; }
-  public int Timeout { get; set; }
+  public string Port { get; set; }
+  public string Timeout { get; set; }
   public string UserName { get; set; }
   public string Password { get; set; }
 }
 ```
+> Note:
+> 
+> Since AWS Secrets Manager stores key-value pairs as <string,string> options classes shoud contain strings.  It is possible to add code to the Configuration Provider that parses the JSON into proper types, but it complicates the code that I think has more cost than benefit.
 
 ### Inject them into a Dependency Injection collection
 ```csharp
@@ -171,7 +174,7 @@ public DependencyInjectionMockUnitTests()
     {
         { "Database:server", "localhost" },
         { "Database:port", "3306" },
-        { "Database:timeout", 1 },
+        { "Database:timeout", "1" },
         { "Database:username", "MyLocalAdmin" },
         { "Database:password", "StillNunyaBizness!" },
     };
