@@ -3,9 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32319.34
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwsSecretsManager", "Configuration.Providers\AwsSecretsManager.csproj", "{72E28CF1-DD27-4890-A6BE-FDA27D426E38}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwsSecretsManager", "AwsSecretsManager\AwsSecretsManager.csproj", "{72E28CF1-DD27-4890-A6BE-FDA27D426E38}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwsSecretsManager.Tests", "Configuration.Providers.Tests\AwsSecretsManager.Tests.csproj", "{87FECC68-C4CC-4146-A15C-1D0DDE9F07BB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AwsSecretsManager.Tests", "AwsSecretsManager.Tests\AwsSecretsManager.Tests.csproj", "{87FECC68-C4CC-4146-A15C-1D0DDE9F07BB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{37CEBF36-B587-47BA-B3DA-D6DF70C6637A}"
 	ProjectSection(SolutionItems) = preProject
