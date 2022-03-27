@@ -8,7 +8,7 @@ using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Configuration.Providers.Tests.AwsSecretsManager.Mocks
+namespace Configuration.Providers.AwsSecretsManager.Tests.Mocks
 {
     public class MockAwsSecretsManager : IAmazonSecretsManager
     {

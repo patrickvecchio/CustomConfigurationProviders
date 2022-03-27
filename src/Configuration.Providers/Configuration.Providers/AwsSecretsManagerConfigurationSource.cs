@@ -1,7 +1,7 @@
 ﻿using Amazon.SecretsManager;
 using Microsoft.Extensions.Configuration;
 
-namespace Extensions.Configuration.Providers.AwsSecretsManager
+namespace Configuration.Providers.AwsSecretsManager
 {
     /// <summary>
     /// <inheritdoc/>

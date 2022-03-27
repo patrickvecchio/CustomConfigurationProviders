@@ -1,4 +1,4 @@
-﻿namespace Configuration.Providers.Tests.AwsSecretsManager.Options
+﻿namespace Configuration.Providers.AwsSecretsManager.Tests.Options
 {
     public class TestOptions
     {
