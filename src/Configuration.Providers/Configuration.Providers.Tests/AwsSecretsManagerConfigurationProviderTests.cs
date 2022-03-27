@@ -1,6 +1,5 @@
-using Configuration.Providers.Tests.AwsSecretsManager.Mocks;
-using Configuration.Providers.Tests.AwsSecretsManager.Options;
-using Configuration.Providers.AwsSecretsManager;
+using Configuration.Providers.AwsSecretsManager.Tests.Mocks;
+using Configuration.Providers.AwsSecretsManager.Tests.Options;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
