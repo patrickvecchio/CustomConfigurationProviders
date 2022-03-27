@@ -3,10 +3,9 @@ using Amazon.SecretsManager.Model;
 using Microsoft.Extensions.Configuration;
 using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.Json;
 
-namespace Extensions.Configuration.Providers.AwsSecretsManager
+namespace Configuration.Providers.AwsSecretsManager
 {
     /// <summary>
     /// The custom <see cref="Configuration"/> that will retrieve AWS Secrets Manager values.
