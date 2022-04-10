@@ -43,7 +43,7 @@ Here is what our IConfiguration values look like before and after we call .AddAw
 
 ### How it works
 
-Add the provider along with an AwsSecretsManager client (this is to allow for injecting mock versions or other versions of the client) and the name of the key you chose to put in your appsettings (e.g. "AwsSecret"):
+Add the provider along with an AwsSecretsManager client (this is to allow for injecting mock versions or other versions of the client) and the name of the placeholder key you chose to put in your appsettings (e.g. "AwsSecret"):
 
 ```csharp
     var configurationBuilder = new ConfigurationBuilder();
@@ -59,9 +59,9 @@ Add the provider along with an AwsSecretsManager client (this is to allow for in
 > A couple of things worth noting in this sample
 >
 > * We're supplying an AmazonSecretsManagerClient to simplify testing and to choose the region in our app startup.
-> * In `AddAwsSecretsManager()` we're specifying the key to search and replace (e.g. "AwsSecret") with AWS Secrets Manager values.  You can choose whatever string you want.
+> * In `AddAwsSecretsManager()` we're specifying the placeholder key to search and replace (e.g. "AwsSecret") with AWS Secrets Manager values.  You can choose whatever string you want.
 
-When you build the config builder, the custom configuration provider will look in the appsettings files you've loaded for the key "AwsSecret" take it's value "/dev/db/options" and replace the whole key with the values retrieved from AWS Secrets Manager (in the IConfiguration tree in memory, not the appsettings file) like so:
+When you build the config builder, the custom configuration provider will look in the appsettings files you've loaded for the placeholder key you specified (e.g. "AwsSecret") take it's value "/dev/db/options" and replace the value with the values retrieved from AWS Secrets Manager (i.e. in the IConfiguration tree in memory, not the appsettings file) like so:
 
 | IConfiguration before | IConfiguration after |
 |---|---|
