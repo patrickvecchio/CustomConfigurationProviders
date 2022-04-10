@@ -9,7 +9,7 @@ Custom Configuration Providers is a collection of configuration providers for .N
 
 Using this custom configuration provider, you can put AWS Secrets Manager keys into your appsettings files and the values stored in AWS Secrets Manager will be loaded into the config at startup time as if they were in the appsettings file already.  Using single AWS secrets keys we can selectively load just the secrets our app needs.
 
-By resolving the secret values are startup allows us to do is to leverage the [Options pattern in .Net](https://docs.microsoft.com/en-us/dotnet/core/extensions/options) along with Dependency Injection to automatically load these settings into the classes that need them, meaning our code can be written in a way that it doesn't care where the settings come from.  This simplifies our testing because our unit tests can use an in-memory configuration provider with the test values pre-populated leaving them without the need to mock Secrets Manager or make connections from our CI/CD pipeline to a test instance of Secrets Manager.
+By resolving the secret values at startup we can leverage the [Options pattern in .Net](https://docs.microsoft.com/en-us/dotnet/core/extensions/options) along with Dependency Injection to automatically load these settings into the classes that need them, meaning our code can be written in a way that it doesn't care where the settings come from.  As a bonus, this simplifies our testing because our unit tests can use an in-memory configuration provider with the test values pre-populated leaving them without the need to mock Secrets Manager or make connections from our CI/CD pipeline to a test instance of Secrets Manager.
 
 So, here is an example of some values stored in the "/dev/db/options" key of our AWS Secrets Manager instance:
 
@@ -45,7 +45,7 @@ Here is what our IConfiguration values look like before and after we call .AddAw
 
 ### How it works
 
-Custom configuration providers work as extension methods for ConfigurationBuilder.  As long as the custom provider is included in your source and it's namespace is in your "using" statements, you should be able to just call ".AddAwsSecretsManager(...)".
+Custom configuration providers work as extension methods for ConfigurationBuilder.  As long as the custom provider is included in your source and its namespace is in your "using" statements, you should be able to just call ".AddAwsSecretsManager(...)".
 
 In your app's startup code, add the provider to your configuration builder along with an AwsSecretsManager client (this is to allow for injecting mock versions or other versions of the client) and the name of the placeholder key you chose to put in your appsettings (e.g. "AwsSecret"):
 
