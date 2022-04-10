@@ -7,9 +7,11 @@ Custom Configuration Providers is a collection of configuration providers for .N
 
 ### Overview
 
-Using this custom configuration provider, you can put AWS Secrets Manager keys into your appsettings files and the values stored in AWS Secrets Manager will be loaded into the config at startup time as if they were in the appsettings file already.  What this auto-population of the secret configuration values allow us to do is to leverage the [Options pattern in .Net](https://docs.microsoft.com/en-us/dotnet/core/extensions/options) along with Dependency Injection to automatically load these settings into the classes that need them.  In addition, having the settings pre-loaded at startup time means we can eliminate the need to mock an AwsSecretsManager and try to fake the settings at execution time.  We can simply use a test version of our appsettings file or in-memory configuration provider with the test values pre-populated and leave AWS Secrets Manager out of our unit tests completely.
+Using this custom configuration provider, you can put AWS Secrets Manager keys into your appsettings files and the values stored in AWS Secrets Manager will be loaded into the config at startup time as if they were in the appsettings file already.  Using single AWS secrets keys we can selectively load just the secrets our app needs.
 
-So, here are the values in the "/dev/db/options" AWS secret:
+By resolving the secret values are startup allows us to do is to leverage the [Options pattern in .Net](https://docs.microsoft.com/en-us/dotnet/core/extensions/options) along with Dependency Injection to automatically load these settings into the classes that need them, meaning our code can be written in a way that it doesn't care where the settings come from.  This simplifies our testing because our unit tests can use an in-memory configuration provider with the test values pre-populated leaving them without the need to mock Secrets Manager or make connections from our CI/CD pipeline to a test instance of Secrets Manager.
+
+So, here is an example of some values stored in the "/dev/db/options" key of our AWS Secrets Manager instance:
 
 ```json
 {
@@ -21,7 +23,7 @@ So, here are the values in the "/dev/db/options" AWS secret:
 }
 ```
 
-Here are the appsettings:
+Here are our appsettings:
 
 ```json
   {
@@ -31,7 +33,7 @@ Here are the appsettings:
   }
 ```
 
-Here is what our IConfiguration values look like before and after we call .AddAwsSecretsManager:
+Here is what our IConfiguration values look like before and after we call .AddAwsSecretsManager, specifying "AwsSecret" as our placeholder key:
 
 | IConfiguration before | IConfiguration after |
 |---|---|
@@ -43,7 +45,9 @@ Here is what our IConfiguration values look like before and after we call .AddAw
 
 ### How it works
 
-Add the provider along with an AwsSecretsManager client (this is to allow for injecting mock versions or other versions of the client) and the name of the placeholder key you chose to put in your appsettings (e.g. "AwsSecret"):
+Custom configuration providers work as extension methods for ConfigurationBuilder.  As long as the custom provider is included in your source and it's namespace is in your "using" statements, you should be able to just call ".AddAwsSecretsManager(...)".
+
+In your app's startup code, add the provider to your configuration builder along with an AwsSecretsManager client (this is to allow for injecting mock versions or other versions of the client) and the name of the placeholder key you chose to put in your appsettings (e.g. "AwsSecret"):
 
 ```csharp
     var configurationBuilder = new ConfigurationBuilder();
@@ -61,7 +65,7 @@ Add the provider along with an AwsSecretsManager client (this is to allow for in
 > * We're supplying an AmazonSecretsManagerClient to simplify testing and to choose the region in our app startup.
 > * In `AddAwsSecretsManager()` we're specifying the placeholder key to search and replace (e.g. "AwsSecret") with AWS Secrets Manager values.  You can choose whatever string you want.
 
-When you build the config builder, the custom configuration provider will look in the appsettings files you've loaded for the placeholder key you specified (e.g. "AwsSecret") take it's value "/dev/db/options" and replace the value with the values retrieved from AWS Secrets Manager (i.e. in the IConfiguration tree in memory, not the appsettings file) like so:
+When you call "Build" on the config builder, the custom configuration provider will look in the appsettings files you've loaded for the placeholder key you specified (e.g. "AwsSecret") take it's value "/dev/db/options" and replace the value with the values retrieved from AWS Secrets Manager (i.e. in the IConfiguration tree in memory, not the appsettings file) like so:
 
 | IConfiguration before | IConfiguration after |
 |---|---|
@@ -90,7 +94,7 @@ public class DatabaseOptions
 
 > Note:
 >
-> Since AWS Secrets Manager stores key-value pairs as <string,string> options classes should contain strings.  It is possible to add code to the Configuration Provider that parses the JSON into proper types, but it complicates the code that I think has more cost than benefit.
+> Since AWS Secrets Manager stores key-value pairs as <string,string> options classes should contain strings.  It is possible to add code to the Configuration Provider that parses the JSON into proper types, but it complicates the code in a way that I think has more cost than benefit.  Simpler to treat them as strings and convert them to the needed types by the classes that consume them.
 
 #### Inject them into a Dependency Injection collection
 
@@ -144,7 +148,7 @@ public DependencyInjectionMockUnitTests()
         {
             _configuration.GetSection("Database").Bind(settings);
         });
-    _services.AddScoped<IServiceThatUsesDatabaseOptions, IServiceThatUsesDatabaseOptions>();
+    _services.AddScoped<IServiceThatUsesDatabaseOptions, ServiceThatUsesDatabaseOptions>();
 
     _serviceProvider = _services.BuildServiceProvider();
 
