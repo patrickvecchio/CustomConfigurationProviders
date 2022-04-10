@@ -43,29 +43,6 @@ Here is what our IConfiguration values look like before and after we call .AddAw
 
 ### How it works
 
-Let's say you have the following secret stored in AWS Secrets Manager under the key "/dev/db/options".
-Setting  | Value
--------  | -----
-server   | db1.myurl.com
-port     | 3306
-timeout  | 5
-username | ApiReadOnly
-password | NunyaBizness!
-
-Using this provider you could put the following in your `appsettings.{environment}.json` file:
-
-```json
-{
-  "Database": {
-    "AwsSecret": "/dev/db/options"
-  }
-}
-```
-
-> **Note:**
->
-> In the next step, you'll see how you can choose any string you want in place of "AwsSecret"
-
 Add the provider along with an AwsSecretsManager client (this is to allow for injecting mock versions or other versions of the client) and the name of the key you chose to put in your appsettings (e.g. "AwsSecret"):
 
 ```csharp
